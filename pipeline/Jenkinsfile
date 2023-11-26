@@ -1,0 +1,86 @@
+// Scripted pipline
+
+// node {
+//   stage('preperation'){
+//     echo 'cloning repo'
+//     git url:'https://github.com/mukeshphulwani66/simple-node-proj.git',branch:'main'
+//   }
+//   stage('test'){
+//     echo 'running test cases'
+//      nodejs(nodeJSInstallationName: 'node 16') {
+//       sh 'npm i -D'
+//       sh 'npm run test'
+//     }
+//   }
+//   stage('build'){
+//     echo 'building image'
+//     sh 'docker build -t mukeshphulwani66/pipelinedemo:${BUILD_NUMBER} .'
+//   }
+//   stage('deploy to docker hub'){
+//     withCredentials([usernamePassword(credentialsId: 'dockerhubcred', usernameVariable: 'USERNAME_DOC', passwordVariable: 'PASSWORD_DOC')]) {
+//        sh 'docker login -u ${USERNAME_DOC} -p ${PASSWORD_DOC}'
+//        sh 'docker image push mukeshphulwani66/pipelinedemo:${BUILD_NUMBER}'
+//    }
+//   }
+//    stage('cleanup'){
+//     sh 'docker logout'
+//   }
+// }
+
+// Declarative 
+
+pipeline {
+    agent any
+    environment { 
+        IMAGE_NAME_DOC = "mukeshphulwani66/pipelinedemo:${BUILD_NUMBER}"
+        scannerHome =  tool 'SonarScanner';
+    }
+    stages {
+        stage('preparation') {
+            steps {
+                echo 'cloning repo'
+                git url: 'https://github.com/mukeshphulwani66/simple-node-proj.git', branch: 'main'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps{
+               withSonarQubeEnv('SonarScanner') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+              } 
+            }
+            
+        }
+        
+        stage('test') {
+            steps {
+                echo 'running test cases'
+                nodejs(nodeJSInstallationName: 'node 16') {
+                    sh 'npm i -D'
+                    sh 'npm run test'
+                }
+            }
+        }
+        
+        stage('build') {
+            steps {
+                echo 'building image'
+                sh 'docker build -t ${IMAGE_NAME_DOC} .'
+            }
+        }
+        
+        stage('deploy to docker hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhubcred', usernameVariable: 'USERNAME_DOC', passwordVariable: 'PASSWORD_DOC')]) {
+                    sh 'docker login -u ${USERNAME_DOC} -p ${PASSWORD_DOC}'
+                    sh 'docker image push ${IMAGE_NAME_DOC}'
+                }
+            }
+        }
+        
+        stage('cleanup') {
+            steps {
+                sh 'docker logout'
+            }
+        }
+    }
+}
