@@ -1,8 +1,8 @@
 job("node js project ver 2"){
     description("this project will clone node js proj and build and push it to docker hub")
      scm {
-        git('https://fahad77-create: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@github.com/fahad77-create/simple-node-jenkins-test.git','main') { node -> 
-            node / gitConfigName('fahad77-create')
+        git('https://Fahad77-create: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@github.com/Fahad77-create/simple-node-jenkins-test.git','main') { node -> 
+            node / gitConfigName('Fahad77-create')
             node / gitConfigEmail('fahadkhaique070103@gmail.com')
         }
     }
