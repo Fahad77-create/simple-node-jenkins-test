@@ -18,12 +18,14 @@ job("node js project ver 2"){
     steps{
         shell('npm install')
         shell('docker login -u ${USERNAME_DOCKER} -p ${PASS_DOCKER}')
+  
+        // to create repository on Dockerhub
         dockerBuildAndPublish {
             repositoryName('fahadx/nodejs-jenkins-demo')
             tag('${BUILD_NUMBER}')
             registryCredentials('dockerhubCred')
 
-         // defaults   
+        // defaults   
             forcePull(false)
             createFingerprints(false)
             skipDecorate()
