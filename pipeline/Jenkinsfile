@@ -70,7 +70,7 @@ pipeline {
         
         stage('deploy to docker hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhubCred', usernameVariable: 'USERNAME_DOCKER', passwordVariable: 'PASSWORD_DOCKER')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhubCred', usernameVariable: 'USERNAME_DOCKER', passwordVariable: 'PASS_DOCKER')]) {
                     sh 'docker login -u ${USERNAME_DOCKER} -p ${PASS_DOCKER}'
                     sh 'docker image push fahadx/pipeline-test'
                 }
