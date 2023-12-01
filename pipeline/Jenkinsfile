@@ -46,7 +46,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                          // name assign in J-tools
-                withSonarQubeEnv(sonarScanner) {
+                withSonarQubeEnv() {
                 sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
