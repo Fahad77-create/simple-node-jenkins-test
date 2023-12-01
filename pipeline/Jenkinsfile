@@ -33,7 +33,7 @@ pipeline {
     agent any
     environment { 
     //     IMAGE_NAME_DOC = "mukeshphulwani66/pipelinedemo:${BUILD_NUMBER}"
-        scannerHome =  tool 'sonarScanner';
+        scannerHome =  tool 'SonarScanner';
      }
     stages {
         stage('preparation') {
@@ -45,8 +45,8 @@ pipeline {
     
         stage('SonarQube Analysis') {
             steps{
-                         // name assign in J-tools
-                withSonarQubeEnv() {
+                         // name assign in system
+                withSonarQubeEnv(sonarScan) {
                 sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
