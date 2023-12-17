@@ -42,12 +42,7 @@ pipeline {
         stage('preparation') {
             steps {
                 echo 'cloning repo'
-              // Extract username and password from the credentials
-                // def gitCredentials = credentials('your-credentials-id')
-                // def gitUsername = gitCredentials.username
-                // def gitPassword = gitCredentials.password
-                // withCredentials([usernamePassword(credentialsId: 'your-credentials-id', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')])
-                // git url: 'https://github.com/Fahad77-create/simple-node-jenkins-test.git', branch: 'master'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'Git-cred', url: 'https://github.com/Fahad77-create/simple-node-jenkins-test.git']]])
             }
         }
     
@@ -59,15 +54,6 @@ pipeline {
                 }
             }
         }
-  
-        // stage('SonarQube Analysis') {
-        //     steps{
-        //        withSonarQubeEnv('SonarScanner') {
-        //             sh "${scannerHome}/bin/sonar-scanner"
-        //       } 
-        //     }
-            
-        // }
         
         stage('test') {
             steps {
